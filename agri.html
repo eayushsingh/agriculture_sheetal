@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sasyam | AI Powered Agriculture</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  :root{
+    --ink:        #10231c;
+    --forest:     #163a2c;
+    --forest-2:   #1f4d3a;
+    --leaf:       #2f6b4f;
+    --leaf-light: #eef4ee;
+    --paper:      #faf7ef;
+    --wheat:      #c69a3b;
+    --wheat-dark: #a97f28;
+    --line:       #e4ded0;
+  }
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    background:var(--paper);
+    color:var(--ink);
+  }
+  .font-display{font-family:'Fraunces',serif; font-optical-sizing:auto;}
+  .font-mono{font-family:'IBM Plex Mono',monospace;}
+
+  /* subtle paper grain so flat green fields don't feel like a generic gradient */
+  .grain{position:relative;}
+  .grain::before{
+    content:"";
+    position:absolute; inset:0;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+    pointer-events:none;
+    mix-blend-mode:overlay;
+  }
+
+  .rule{border-top:1px solid var(--line);}
+  .field-line{
+    background-image: repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(22,58,44,0.06) 79px, rgba(22,58,44,0.06) 80px);
+  }
+
+  .btn-primary{
+    background:var(--leaf);
+    color:var(--paper);
+    transition:transform .18s ease, background .18s ease, box-shadow .18s ease;
+    box-shadow:0 1px 0 rgba(16,35,28,0.05);
+  }
+  .btn-primary:hover{background:var(--forest-2); transform:translateY(-1px);}
+  .btn-primary:active{transform:translateY(0);}
+
+  .btn-ghost{
+    color:var(--forest);
+    border:1px solid var(--line);
+    transition:border-color .18s ease, background .18s ease;
+  }
+  .btn-ghost:hover{border-color:var(--leaf); background:var(--leaf-light);}
+
+  .chip{
+    font-family:'IBM Plex Mono',monospace;
+    letter-spacing:.02em;
+  }
+
+  /* ledger card: signature element */
+  .ledger{
+    background:var(--paper);
+    border:1px solid var(--line);
+    box-shadow:0 30px 60px -25px rgba(16,35,28,0.35);
+  }
+  .ledger-head{
+    background:var(--forest);
+  }
+  .ledger-row{border-bottom:1px dashed var(--line);}
+  .ledger-row:last-child{border-bottom:none;}
+
+  .stamp{
+    transform:rotate(-6deg);
+    border:2px solid var(--wheat-dark);
+    color:var(--wheat-dark);
+  }
+
+  .num-tick{font-variant-numeric: tabular-nums;}
+
+  @media (prefers-reduced-motion: no-preference){
+    .sway{ animation: sway 6s ease-in-out infinite; }
+    @keyframes sway{
+      0%,100%{ transform: rotate(-1.2deg); }
+      50%{ transform: rotate(1.2deg); }
+    }
+    .rise{
+      opacity:0; transform: translateY(14px);
+      animation: rise .7s ease forwards;
+    }
+    @keyframes rise{ to{ opacity:1; transform:none; } }
+  }
+
+  ::selection{background:var(--wheat); color:var(--ink);}
+  :focus-visible{outline:2px solid var(--wheat-dark); outline-offset:3px;}
+</style>
+</head>
+<body class="overflow-x-hidden">
+
+  <!-- Top strip: harvest-ledger register, not a generic notification bar -->
+  <div class="w-full bg-[var(--forest)] text-[var(--paper)]/80 text-xs font-mono">
+    <div class="max-w-[1400px] mx-auto px-6 py-2 flex items-center justify-between">
+      <span>KHARIF REGISTER &middot; RABI 2026-27 SEASON OPEN</span>
+      <span class="hidden sm:inline">MANDI SYNC: LIVE</span>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="flex items-center justify-between px-6 py-5 max-w-[1400px] mx-auto w-full border-b border-[var(--line)]">
+    <div class="flex items-center gap-3">
+      <div class="bg-[var(--forest)] p-1.5 rounded-md">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--paper)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 14 6h7v7a7 7 0 0 1-7 7h-3Z"/><path d="M14 6v6a3 3 0 0 1-3 3h-4"/></svg>
+      </div>
+      <span class="text-2xl font-display font-semibold text-[var(--forest)] tracking-tight">Sasyam</span>
+      <span class="ml-1 px-2.5 py-0.5 bg-[var(--leaf-light)] text-[var(--leaf)] text-[11px] font-mono font-medium rounded-full border border-[var(--line)]">
+        SIH 2026
+      </span>
+    </div>
+
+    <div class="hidden md:flex items-center gap-7">
+      <div class="flex items-center bg-[var(--leaf-light)] p-1 rounded-md border border-[var(--line)]">
+        <button class="bg-[var(--forest)] text-[var(--paper)] px-3 py-1 text-sm font-medium rounded">EN</button>
+        <button class="text-[var(--forest)]/60 hover:text-[var(--forest)] px-3 py-1 text-sm font-medium rounded transition-colors">हिंदी</button>
+      </div>
+
+      <button class="p-2 text-[var(--forest)]/50 hover:text-[var(--forest)] transition-colors relative" aria-label="Notifications">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+        <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-[var(--wheat-dark)] rounded-full border-2 border-[var(--paper)]"></span>
+      </button>
+
+      <a href="#" class="text-sm font-semibold text-[var(--forest)] hover:text-[var(--leaf)] transition-colors">Log in</a>
+
+      <button class="btn-primary px-5 py-2.5 rounded-md text-sm font-semibold flex items-center gap-2">
+        Get started
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <main class="max-w-[1400px] mx-auto px-6 pt-16 pb-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+
+      <div class="max-w-xl z-10 rise" style="animation-delay:.05s">
+        <div class="inline-flex items-center gap-2 chip text-[11px] text-[var(--leaf)] bg-[var(--leaf-light)] border border-[var(--line)] px-3 py-1 rounded-full mb-7">
+          <span class="w-1.5 h-1.5 rounded-full bg-[var(--leaf)]"></span>
+          NOW OPEN FOR RABI 2026
+        </div>
+
+        <h1 class="text-5xl sm:text-6xl font-display font-semibold leading-[1.08] tracking-tight text-[var(--ink)]">
+          Every acre,
+          <span class="block text-[var(--leaf)] italic font-normal">understood.</span>
+        </h1>
+
+        <p class="mt-7 text-lg text-[var(--ink)]/60 leading-relaxed max-w-md">
+          One clear answer, every day: sell, store, or process. Sasyam watches your soil, your crop, and the market so you don't have to guess.
+        </p>
+
+        <div class="mt-9 flex flex-wrap items-center gap-3">
+          <button class="btn-primary px-7 py-3.5 rounded-md text-[15px] font-semibold flex items-center gap-2">
+            Get started
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </button>
+          <button class="btn-ghost px-7 py-3.5 rounded-md text-[15px] font-semibold">
+            Watch it work
+          </button>
+        </div>
+
+        <div class="mt-12 flex items-center gap-8 rule pt-6">
+          <div>
+            <div class="font-mono text-2xl font-semibold text-[var(--forest)] num-tick">40,000+</div>
+            <div class="text-xs text-[var(--ink)]/45 mt-0.5">Farms</div>
+          </div>
+          <div>
+            <div class="font-mono text-2xl font-semibold text-[var(--forest)] num-tick">₹18cr</div>
+            <div class="text-xs text-[var(--ink)]/45 mt-0.5">Saved this season</div>
+          </div>
+          <div>
+            <div class="font-mono text-2xl font-semibold text-[var(--forest)] num-tick">22</div>
+            <div class="text-xs text-[var(--ink)]/45 mt-0.5">States</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: the Ledger, signature element -->
+      <div class="relative rise" style="animation-delay:.2s">
+        <div class="ledger rounded-2xl overflow-hidden sway origin-top">
+          <div class="ledger-head text-[var(--paper)] p-7 relative grain">
+            <div class="flex items-center justify-between relative z-10">
+              <div>
+                <div class="chip text-[11px] text-[var(--paper)]/60 mb-2">KRISHI&#8209;SAKHA</div>
+                <h2 class="text-xl font-display font-semibold">Balarama Farms</h2>
+                <p class="text-[13px] text-[var(--paper)]/60 mt-1">Ramesh Kumar &middot; Khurja, UP &middot; 12 acres</p>
+              </div>
+              <div class="stamp text-[10px] font-mono px-2.5 py-1 rounded shrink-0 mt-1">3 LIVE PLOTS</div>
+            </div>
+          </div>
+
+          <div class="p-7 field-line">
+            <div class="grid grid-cols-4 gap-3 mb-6">
+              <div class="bg-[var(--paper)] p-3.5 rounded-lg border border-[var(--line)]">
+                <div class="text-[10px] chip text-[var(--ink)]/40 mb-1">CROPS</div>
+                <div class="font-display text-lg font-semibold text-[var(--forest)]">3</div>
+              </div>
+              <div class="bg-[var(--paper)] p-3.5 rounded-lg border border-[var(--line)]">
+                <div class="text-[10px] chip text-[var(--ink)]/40 mb-1">SOIL</div>
+                <div class="font-display text-lg font-semibold text-[var(--forest)]">A&minus;</div>
+              </div>
+              <div class="bg-[var(--paper)] p-3.5 rounded-lg border border-[var(--line)]">
+                <div class="text-[10px] chip text-[var(--ink)]/40 mb-1">ALERTS</div>
+                <div class="font-display text-lg font-semibold text-[var(--wheat-dark)]">12</div>
+              </div>
+              <div class="bg-[var(--paper)] p-3.5 rounded-lg border border-[var(--line)]">
+                <div class="text-[10px] chip text-[var(--ink)]/40 mb-1">EST. YIELD</div>
+                <div class="font-display text-lg font-semibold text-[var(--forest)]">8.5t</div>
+              </div>
+            </div>
+
+            <div class="text-[11px] chip text-[var(--ink)]/40 mb-3">YOUR PLOTS</div>
+            <div class="bg-[var(--paper)] rounded-lg border border-[var(--line)] divide-y divide-[var(--line)]">
+              <div class="ledger-row flex items-center gap-4 p-4">
+                <div class="w-10 h-10 rounded-md bg-[var(--leaf-light)] flex items-center justify-center text-lg">🌾</div>
+                <div class="flex-1">
+                  <div class="font-semibold text-sm text-[var(--ink)]">Wheat &middot; Sonalika</div>
+                  <div class="text-xs text-[var(--ink)]/45">Day 75 of season</div>
+                </div>
+                <div class="px-2.5 py-1 bg-[var(--leaf-light)] text-[var(--leaf)] text-[11px] font-medium rounded-full">Healthy</div>
+              </div>
+              <div class="ledger-row flex items-center gap-4 p-4">
+                <div class="w-10 h-10 rounded-md bg-[#fbeee0] flex items-center justify-center text-lg">🍅</div>
+                <div class="flex-1">
+                  <div class="font-semibold text-sm text-[var(--ink)]">Tomato &middot; Hybrid</div>
+                  <div class="text-xs text-[var(--ink)]/45">Needs fertiliser this week</div>
+                </div>
+                <div class="px-2.5 py-1 bg-[#fbeee0] text-[var(--wheat-dark)] text-[11px] font-medium rounded-full">Act now</div>
+              </div>
+              <div class="ledger-row flex items-center gap-4 p-4">
+                <div class="w-10 h-10 rounded-md bg-[var(--leaf-light)] flex items-center justify-center text-lg">🌿</div>
+                <div class="flex-1">
+                  <div class="font-semibold text-sm text-[var(--ink)]">Mustard &middot; Pusa Bold</div>
+                  <div class="text-xs text-[var(--ink)]/45">Ready in 9 days</div>
+                </div>
+                <div class="px-2.5 py-1 bg-[var(--leaf-light)] text-[var(--leaf)] text-[11px] font-medium rounded-full">On track</div>
+              </div>
+            </div>
+
+            <div class="mt-5 flex items-center justify-between bg-[var(--forest)] rounded-lg p-4 grain">
+              <div class="relative z-10">
+                <div class="chip text-[10px] text-[var(--paper)]/55">TODAY'S CALL</div>
+                <div class="font-display text-lg font-semibold text-[var(--paper)] mt-0.5">Store the wheat 3 weeks</div>
+              </div>
+              <div class="relative z-10 chip text-[11px] text-[var(--wheat)] font-semibold">+₹4,200/t</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- second sheet peeking out, referencing a paper register rather than generic stacked cards -->
+        <div class="absolute -z-10 -right-4 -bottom-4 w-full h-full rounded-2xl border border-[var(--line)] bg-[var(--paper)]"></div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Feature strip: the actual product pillars, framed as ledger sections -->
+  <section class="max-w-[1400px] mx-auto px-6 py-24 rule">
+    <div class="flex items-end justify-between flex-wrap gap-4 mb-14">
+      <h2 class="text-3xl font-display font-semibold text-[var(--ink)]">Built around three questions</h2>
+      <p class="text-sm text-[var(--ink)]/45 max-w-xs">The ones you actually ask yourself, every morning.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-px bg-[var(--line)] border border-[var(--line)] rounded-2xl overflow-hidden">
+      <div class="bg-[var(--paper)] p-8">
+        <div class="chip text-[11px] text-[var(--leaf)] mb-4">01</div>
+        <h3 class="font-display text-xl font-semibold mb-3">Is it healthy?</h3>
+        <p class="text-sm text-[var(--ink)]/55 leading-relaxed">A photo of a leaf is enough. Sasyam names the problem and the exact dose to fix it, sized to your plot.</p>
+      </div>
+      <div class="bg-[var(--paper)] p-8">
+        <div class="chip text-[11px] text-[var(--leaf)] mb-4">02</div>
+        <h3 class="font-display text-xl font-semibold mb-3">Is it ready?</h3>
+        <p class="text-sm text-[var(--ink)]/55 leading-relaxed">Growth stage, weather, and soil moisture, followed together. Harvest timing stops being a guess.</p>
+      </div>
+      <div class="bg-[var(--paper)] p-8">
+        <div class="chip text-[11px] text-[var(--leaf)] mb-4">03</div>
+        <h3 class="font-display text-xl font-semibold mb-3">What now?</h3>
+        <p class="text-sm text-[var(--ink)]/55 leading-relaxed">Mandi price, storage cost, and spoilage risk, weighed for you. One answer: sell, store, or process.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="border-t border-[var(--line)] py-8">
+    <div class="max-w-[1400px] mx-auto px-6 flex items-center justify-between text-xs text-[var(--ink)]/40 font-mono">
+      <span>&copy; 2026 SASYAM</span>
+      <span>BUILT FOR SMART INDIA HACKATHON</span>
+    </div>
+  </footer>
+
+</body>
+</html>
